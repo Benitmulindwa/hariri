@@ -1,5 +1,6 @@
 from flet import *
 import flet as ft
+import autopep8
 
 
 def editor_style():
@@ -18,10 +19,12 @@ class CodeEditor(ft.TextField):
         self.page = page
         self.page.on_keyboard_event = self.on_keyboard
 
+    # App bar
+
     def app_bar(self, page):
         return AppBar(
             bgcolor="#164863",
-            title=Row([TextButton("File", on_click=self.run)]),
+            title=Row([TextButton("File", on_click=self.format_code)]),
             actions=[
                 IconButton(ft.icons.PLAY_ARROW, on_click=self.run),
                 IconButton(ft.icons.WB_SUNNY_OUTLINED),
@@ -90,13 +93,14 @@ class CodeEditor(ft.TextField):
         self.value = ""
         self.update()
 
+    # Open a file
     def open_clicked(self, e):
         file_picker = FilePicker(on_result=self.open_file_result)
         self.page.overlay.append(file_picker)
         self.page.update()
 
         file_picker.pick_files(
-            allow_multiple=False, allowed_extensions="txt", dialog_title="Open File"
+            allow_multiple=False, allowed_extensions="py", dialog_title="Open File"
         )
 
     def open_file_result(self, e: FilePickerResultEvent):
@@ -111,6 +115,14 @@ class CodeEditor(ft.TextField):
     def exit(self, e):
         print("exit clicked")
 
+    # formatting the code
+
+    def format_code(self, e):
+        code = self.value
+        formatted_code = autopep8.fix_code(code)
+        self.code = ""
+        self.value = formatted_code
+
     # Adding shortcuts
 
     def on_keyboard(self, e: ft.KeyboardEvent):
@@ -122,6 +134,8 @@ class CodeEditor(ft.TextField):
             self.save_clicked(e)
         elif e.ctrl and e.shift and e.key == "S":
             self.save_as_clicked(e)
+        elif e.key == "Tab":
+            print(self.value.splitlines()[-1])
 
     def run(self, e):
         code = self.value
@@ -143,32 +157,3 @@ if __name__ == "__main__":
 
 
 ###-----------------------------------------------------------------------------------------------------------------------------------#####
-
-
-# import flet as ft
-
-
-# def main(page: ft.Page):
-#     def pick_files_result(e: ft.FilePickerResultEvent):
-#         print(e.files)
-
-#     pick_files_dialog = ft.FilePicker(on_result=pick_files_result)
-
-#     page.overlay.append(pick_files_dialog)
-
-#     page.add(
-#         ft.Row(
-#             [
-#                 ft.ElevatedButton(
-#                     "Pick files",
-#                     icon=ft.icons.UPLOAD_FILE,
-#                     on_click=lambda _: pick_files_dialog.pick_files(
-#                         allow_multiple=True
-#                     ),
-#                 ),
-#             ]
-#         )
-#     )
-
-
-# ft.app(target=main)
