@@ -13,81 +13,84 @@ def editor_style():
     }
 
 
-class CodeEditor(ft.TextField):
+class CodeEditor(ft.UserControl):
     def __init__(self, page):
-        super().__init__(**editor_style())
+        super().__init__()
         self.page = page
         self.page.on_keyboard_event = self.on_keyboard
 
-    # App bar
-
-    def app_bar(self, page):
-        return AppBar(
-            bgcolor="#164863",
-            title=Row([TextButton("File", on_click=self.format_code)]),
-            actions=[
-                IconButton(ft.icons.PLAY_ARROW, on_click=self.run),
-                IconButton(ft.icons.WB_SUNNY_OUTLINED),
-                PopupMenuButton(
-                    items=[
-                        ft.PopupMenuItem(
-                            on_click=self.new_clicked,
-                            content=Row(
-                                alignment=MainAxisAlignment.SPACE_BETWEEN,
-                                controls=[
-                                    Text("New File"),
-                                    VerticalDivider(),
-                                    Text("CTRL + N"),
-                                ],
-                            ),
-                        ),
-                        ft.PopupMenuItem(
-                            on_click=self.open_clicked,
-                            content=Row(
-                                alignment=MainAxisAlignment.SPACE_BETWEEN,
-                                controls=[
-                                    Text("Open"),
-                                    VerticalDivider(),
-                                    Text("CTRL + O"),
-                                ],
-                            ),
-                        ),
-                        ft.PopupMenuItem(
-                            on_click=self.save_clicked,
-                            content=Row(
-                                alignment=MainAxisAlignment.SPACE_BETWEEN,
-                                controls=[
-                                    Text("Save"),
-                                    VerticalDivider(),
-                                    Text("CTRL + S"),
-                                ],
-                            ),
-                        ),
-                        ft.PopupMenuItem(
-                            on_click=self.save_as_clicked,
-                            content=Row(
-                                alignment=MainAxisAlignment.SPACE_BETWEEN,
-                                controls=[
-                                    Text("Save As"),
-                                    VerticalDivider(),
-                                    Text("CTRL + Shift + S"),
-                                ],
-                            ),
-                        ),
-                        ft.PopupMenuItem(),
-                        ft.PopupMenuItem(
-                            on_click=self.exit,
-                            content=Row(
-                                alignment=MainAxisAlignment.SPACE_BETWEEN,
-                                controls=[
-                                    Text("Exit"),
-                                ],
-                            ),
-                        ),
-                    ]
+    def build(self):
+        # App bar
+        self.file_menu = ft.PopupMenuButton(
+            content=Text("File", size=15),
+            items=[
+                ft.PopupMenuItem(
+                    on_click=self.new_clicked,
+                    content=Row(
+                        alignment=MainAxisAlignment.SPACE_BETWEEN,
+                        controls=[
+                            Text("New File"),
+                            VerticalDivider(),
+                            Text("CTRL + N"),
+                        ],
+                    ),
+                ),
+                ft.PopupMenuItem(
+                    on_click=self.open_clicked,
+                    content=Row(
+                        alignment=MainAxisAlignment.SPACE_BETWEEN,
+                        controls=[
+                            Text("Open"),
+                            VerticalDivider(),
+                            Text("CTRL + O"),
+                        ],
+                    ),
+                ),
+                ft.PopupMenuItem(
+                    on_click=self.save_clicked,
+                    content=Row(
+                        alignment=MainAxisAlignment.SPACE_BETWEEN,
+                        controls=[
+                            Text("Save"),
+                            VerticalDivider(),
+                            Text("CTRL + S"),
+                        ],
+                    ),
+                ),
+                ft.PopupMenuItem(
+                    on_click=self.save_as_clicked,
+                    content=Row(
+                        alignment=MainAxisAlignment.SPACE_BETWEEN,
+                        controls=[
+                            Text("Save As"),
+                            VerticalDivider(),
+                            Text("CTRL + Shift + S"),
+                        ],
+                    ),
+                ),
+                ft.PopupMenuItem(),
+                ft.PopupMenuItem(
+                    on_click=self.exit,
+                    content=Row(
+                        alignment=MainAxisAlignment.SPACE_BETWEEN,
+                        controls=[
+                            Text("Exit"),
+                        ],
+                    ),
                 ),
             ],
         )
+
+        self.page.overlay.append(
+            Container(
+                padding=5,
+                expand=True,
+                bgcolor="#164863",
+                content=Row([self.file_menu]),
+            )
+        )
+        self.main_ft = TextField(**editor_style())
+        return Column(controls=[Divider(opacity=0), self.main_ft])
 
     def new_clicked(self, e):
         self.value = ""
@@ -146,7 +149,6 @@ def main(page: ft.Page):
     page.title = "Hariri"
 
     myEditor = CodeEditor(page)
-    page.appbar = myEditor.app_bar(page)
     page.scroll = ScrollMode.ALWAYS
 
     page.add(myEditor)
