@@ -5,7 +5,7 @@ import autopep8
 
 def editor_style():
     return {
-        "expand": True,
+        # "expand": True,
         "multiline": True,
         "autofocus": True,
         "border": InputBorder.NONE,
@@ -90,7 +90,7 @@ class CodeEditor(ft.UserControl):
             )
         )
         self.main_ft = TextField(**editor_style())
-        return Column(controls=[Divider(opacity=0), self.main_ft])
+        return Column([Divider(opacity=0), self.main_ft])
 
     def new_clicked(self, e):
         self.value = ""
