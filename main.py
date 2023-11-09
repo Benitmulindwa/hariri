@@ -124,20 +124,6 @@ class CodeEditor(ft.UserControl):
             self._snackbar(f"File {file_path} Opened", Icon(icons.CHECK, color="black"))
         self.page.update()
 
-    def save_clicked(self, e):
-        if self.current_file_path == "":
-            self.save_as(e)
-        with open(self.current_file_path, "r") as file:
-            self.is_different = self.main_ft.value != file.read()
-            if self.is_different:
-                with open(self.current_file_path, "w") as new_script:
-                    new_script.write(self.main_ft.value)
-                    self.is_code_different = False
-                    self._snackbar("Saved", Icon(icons.THUMB_UP_OFF_ALT))
-                    self.page.update()
-            else:
-                pass
-
     def save_as(self, e):
         file_picker = FilePicker(on_result=self.save_as_result)
         self.page.overlay.append(file_picker)
@@ -156,6 +142,20 @@ class CodeEditor(ft.UserControl):
         self.page.title = file_name[-1] + self.title_suffix
         self._snackbar(f"Saved As {file_name[-1]}", Icon(icons.CHECK, color="green"))
         self.page.update()
+
+    def save_clicked(self, e):
+        if self.current_file_path == "":
+            self.save_as(e)
+        with open(self.current_file_path, "r") as file:
+            self.is_different = self.main_ft.value != file.read()
+            if self.is_different:
+                with open(self.current_file_path, "w") as new_script:
+                    new_script.write(self.main_ft.value)
+                    self.is_code_different = False
+                    self._snackbar("Saved", Icon(icons.THUMB_UP_OFF_ALT))
+                    self.page.update()
+            else:
+                pass
 
     def exit(self, e):
         print("exit clicked")
