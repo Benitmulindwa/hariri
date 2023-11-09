@@ -18,6 +18,7 @@ class CodeEditor(ft.UserControl):
         super().__init__()
         self.page = page
         self.title_suffix = " -Hariri"
+        self.current_file_path = ""
         self.page.title = "New File" + self.title_suffix
 
         self.page.on_keyboard_event = self.on_keyboard
