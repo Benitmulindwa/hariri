@@ -10,6 +10,7 @@ def editor_style():
         "autofocus": True,
         "border": InputBorder.NONE,
         "height": 500,
+        "color": "blue",
     }
 
 
@@ -22,6 +23,26 @@ class CodeEditor(ft.UserControl):
         self.page.title = "New File" + self.title_suffix
 
         self.page.on_keyboard_event = self.on_keyboard
+
+        self.keywords = [
+            "if",
+            "else",
+            "for",
+            "while",
+            "def",
+            "class",
+            "import",
+            "from",
+            "True",
+            "False",
+            "None",
+        ]
+
+    # def highlight_synthax(self):
+    #     content=self.main_ft.value
+    #     for keyword in self.keywords:
+    #         for i in content:
+    #             self.
 
     def build(self):
         ## APPBAR ##
@@ -97,7 +118,9 @@ class CodeEditor(ft.UserControl):
                 content=Row([self.file_menu]),
             )
         )
-        self.main_ft = TextField(**editor_style())
+        self.main_ft = TextField(
+            **editor_style(), value=Text(""), on_submit=self.format_code
+        )
         return Column([Divider(opacity=0), self.main_ft])
 
     def new_clicked(self, e):
@@ -176,10 +199,14 @@ class CodeEditor(ft.UserControl):
     # formatting the code
 
     def format_code(self, e):
-        code = self.value
+        print("Submitted!!")
+        code = self.main_ft.value
+
+        # Format the code
         formatted_code = autopep8.fix_code(code)
-        self.code = ""
-        self.value = formatted_code
+        self.main_ft.value = ""
+        self.main_ft.value = formatted_code
+        self.main_ft.update()
 
     # Adding shortcuts
 
@@ -192,8 +219,8 @@ class CodeEditor(ft.UserControl):
             self.save_clicked(e)
         elif e.ctrl and e.shift and e.key == "S":
             self.save_as_clicked(e)
-        elif e.key == "Tab":
-            print(self.value.splitlines()[-1])
+        elif e.key == "Enter":
+            self.format_code(e)
 
     def run(self, e):
         code = self.main_ft.value
