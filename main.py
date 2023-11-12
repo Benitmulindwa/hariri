@@ -9,8 +9,8 @@ def editor_style():
         "multiline": True,
         "autofocus": True,
         "border": InputBorder.NONE,
-        "height": 500,
-        "color": "blue",
+        # "height": 500,
+        # "color": "blue",
     }
 
 
@@ -38,11 +38,14 @@ class CodeEditor(ft.UserControl):
             "None",
         ]
 
-    # def highlight_synthax(self):
-    #     content=self.main_ft.value
-    #     for keyword in self.keywords:
-    #         for i in content:
-    #             self.
+    def highlight_synthax(self):
+        content = self.main_ft.value
+        print(content)
+        for word in self.keywords:
+            if word in content:
+                return Text("", spans=[TextSpan(word, TextStyle(color="red"))]).value
+            else:
+                return content
 
     def build(self):
         ## APPBAR ##
@@ -119,7 +122,12 @@ class CodeEditor(ft.UserControl):
             )
         )
         self.main_ft = TextField(
-            **editor_style(), value=Text(""), on_submit=self.format_code
+            **editor_style(),
+            value=Text(
+                "word et papa",
+                spans=[TextSpan("word", TextStyle(size=25, color="red"))],
+            ).value,
+            on_submit=self.format_code,
         )
         return Column([Divider(opacity=0), self.main_ft])
 
@@ -233,7 +241,14 @@ def main(page: ft.Page):
     myEditor = CodeEditor(page)
     page.scroll = ScrollMode.ALWAYS
 
-    page.add(myEditor)
+    page.add(
+        Divider(height=10),
+        Text(
+            "word et papa",
+            spans=[TextSpan("word", TextStyle(size=25, color="red"))],
+        ),
+        myEditor,
+    )
 
 
 if __name__ == "__main__":
