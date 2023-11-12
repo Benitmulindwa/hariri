@@ -5,12 +5,12 @@ import autopep8
 
 def editor_style():
     return {
-        # "expand": True,
+        "expand": True,
         "multiline": True,
         "autofocus": True,
         "border": InputBorder.NONE,
-        # "height": 500,
-        # "color": "blue",
+        "height": 700,
+        "color": "blue",
     }
 
 
@@ -48,8 +48,22 @@ class CodeEditor(ft.UserControl):
                 return content
 
     def build(self):
-        ## APPBAR ##
+        self.sidebar = Container(
+            bgcolor="black",
+            height=700,
+            width=60,
+            padding=0,
+            content=Column(
+                controls=[
+                    IconButton(icon=icons.FOLDER_COPY, icon_size=24),
+                    IconButton(icon=icons.SEARCH, icon_size=24),
+                    Divider(height=400, color="transparent"),
+                    IconButton(icon=icons.SETTINGS, icon_size=24),
+                ]
+            ),
+        )
 
+        ## APPBAR ##
         # File popupmenu
         self.file_menu = ft.PopupMenuButton(
             content=Text("File", size=15),
@@ -121,15 +135,22 @@ class CodeEditor(ft.UserControl):
                 content=Row([self.file_menu]),
             )
         )
-        self.main_ft = TextField(
-            **editor_style(),
-            value=Text(
-                "word et papa",
-                spans=[TextSpan("word", TextStyle(size=25, color="red"))],
-            ).value,
-            on_submit=self.format_code,
+        self.main_ft = Container(
+            expand=True,
+            padding=0,
+            content=TextField(
+                **editor_style(),
+                on_submit=self.format_code,
+            ),
         )
-        return Column([Divider(opacity=0), self.main_ft])
+        return Column(
+            [
+                Divider(height=8, opacity=0),
+                Row(
+                    controls=[self.sidebar, self.main_ft],
+                ),
+            ]
+        )
 
     def new_clicked(self, e):
         self.main_ft.value = ""
@@ -243,10 +264,6 @@ def main(page: ft.Page):
 
     page.add(
         Divider(height=10),
-        Text(
-            "word et papa",
-            spans=[TextSpan("word", TextStyle(size=25, color="red"))],
-        ),
         myEditor,
     )
 
