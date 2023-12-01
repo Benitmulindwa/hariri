@@ -48,21 +48,6 @@ class CodeEditor(ft.UserControl):
                 return content
 
     def build(self):
-        self.sidebar = Container(
-            bgcolor="black",
-            height=700,
-            width=60,
-            padding=0,
-            content=Column(
-                controls=[
-                    IconButton(icon=icons.FOLDER_COPY, icon_size=24),
-                    IconButton(icon=icons.SEARCH, icon_size=24),
-                    Divider(height=400, color="transparent"),
-                    IconButton(icon=icons.SETTINGS, icon_size=24),
-                ]
-            ),
-        )
-
         ## APPBAR ##
         # File popupmenu
         self.file_menu = ft.PopupMenuButton(
@@ -125,30 +110,45 @@ class CodeEditor(ft.UserControl):
             ],
         )
 
+        # Terminal
+        self.terminal = Container(height=150, bgcolor="red")
         # Icons Buttons
+
+        self.run_icon = IconButton(icon=icons.PLAY_ARROW, on_click=self.run)
+        self.dark_light_mode = IconButton(icon=icons.WB_SUNNY_ROUNDED)
 
         self.page.overlay.append(
             Container(
                 padding=5,
                 expand=True,
                 bgcolor="#164863",
-                content=Row([self.file_menu]),
+                content=Row(
+                    controls=[
+                        self.file_menu,
+                        Row(expand=True),
+                        self.run_icon,
+                        self.dark_light_mode,
+                    ]
+                ),
             )
         )
-        self.main_ft = Container(
-            expand=True,
-            padding=0,
-            content=TextField(
-                **editor_style(),
-                on_submit=self.format_code,
-            ),
+        self.main_ft = TextField(
+            **editor_style(),
+            on_submit=self.format_code,
         )
+
         return Column(
             [
-                Divider(height=8, opacity=0),
-                Row(
-                    controls=[self.sidebar, self.main_ft],
+                Column(
+                    # expand=True,
+                    controls=[
+                        Divider(height=8, opacity=0),
+                        Row(
+                            controls=[self.main_ft],
+                        ),
+                    ],
                 ),
+                self.terminal,
             ]
         )
 
@@ -250,6 +250,8 @@ class CodeEditor(ft.UserControl):
             self.save_as_clicked(e)
         elif e.key == "Enter":
             self.format_code(e)
+        elif e.shift and e.key == "R":
+            self.run(e)
 
     def run(self, e):
         code = self.main_ft.value
@@ -262,10 +264,7 @@ def main(page: ft.Page):
     myEditor = CodeEditor(page)
     page.scroll = ScrollMode.ALWAYS
 
-    page.add(
-        Divider(height=10),
-        myEditor,
-    )
+    page.add(Divider(height=10), myEditor)
 
 
 if __name__ == "__main__":
