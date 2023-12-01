@@ -270,12 +270,16 @@ class CodeEditor(ft.UserControl):
     def run(self, e):
         self.terminal.value = ""
         self.terminal.update()
-        command = f"python {self.file_path}"
+        # command = f"python {self.file_path}"
         process = subprocess.Popen(
-            command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True
+            ["python", self.file_path],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            shell=True,
         )
-        print(command)
+        # print(command)
         output, error = process.communicate()
+        print(error)
         self.terminal.value = output
         self.terminal.update()
 
