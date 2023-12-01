@@ -112,7 +112,7 @@ class CodeEditor(ft.UserControl):
 
         # Terminal
 
-        self.terminal = Text(value="gvdgvdvdhuvhudvhdhyd")
+        self.terminal = Text(">: ")
 
         # self.terminal = Column(
         #     scroll=ScrollMode.ALWAYS,
@@ -191,6 +191,7 @@ class CodeEditor(ft.UserControl):
             self._snackbar(
                 f"File {self.file_path} Opened", Icon(icons.CHECK, color="black")
             )
+        self.current_file_path = self.file_path
         self.page.update()
 
     def save_as(self, e):
@@ -270,17 +271,18 @@ class CodeEditor(ft.UserControl):
     def run(self, e):
         self.terminal.value = ""
         self.terminal.update()
-        # command = f"python {self.file_path}"
         process = subprocess.Popen(
             ["python", self.file_path],
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
+            universal_newlines=True,
             shell=True,
         )
         # print(command)
         output, error = process.communicate()
         print(error)
         self.terminal.value = output
+        # self.terminal.value = error
         self.terminal.update()
 
         # self.terminal.controls[0].update()
