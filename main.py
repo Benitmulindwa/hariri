@@ -1,6 +1,7 @@
 from flet import *
 import flet as ft
 import autopep8
+import subprocess
 
 
 def editor_style():
@@ -9,7 +10,7 @@ def editor_style():
         "multiline": True,
         "autofocus": True,
         "border": InputBorder.NONE,
-        "height": 700,
+        "height": 450,
         "color": "blue",
     }
 
@@ -21,7 +22,6 @@ class CodeEditor(ft.UserControl):
         self.title_suffix = " -Hariri"
         self.current_file_path = ""
         self.page.title = "New File" + self.title_suffix
-
         self.page.on_keyboard_event = self.on_keyboard
 
         self.keywords = [
@@ -111,7 +111,21 @@ class CodeEditor(ft.UserControl):
         )
 
         # Terminal
-        self.terminal = Container(height=150, bgcolor="red")
+
+        self.terminal = Text(value="gvdgvdvdhuvhudvhdhyd")
+
+        # self.terminal = Column(
+        #     scroll=ScrollMode.ALWAYS,
+        #     controls=[
+        #         Container(
+        #             height=180,
+        #             theme_mode=ThemeMode.DARK,
+        #             bgcolor="black",
+        #             content=TextField(value="gvdgvdvdhuvhudvhdhyd"),
+        #         )
+        #     ],
+        # )
+
         # Icons Buttons
 
         self.run_icon = IconButton(icon=icons.PLAY_ARROW, on_click=self.run)
@@ -134,13 +148,12 @@ class CodeEditor(ft.UserControl):
         )
         self.main_ft = TextField(
             **editor_style(),
-            on_submit=self.format_code,
+            # on_submit=self.format_code,
         )
 
         return Column(
-            [
+            controls=[
                 Column(
-                    # expand=True,
                     controls=[
                         Divider(height=8, opacity=0),
                         Row(
@@ -148,8 +161,9 @@ class CodeEditor(ft.UserControl):
                         ),
                     ],
                 ),
+                Divider(height=8, opacity=3),
                 self.terminal,
-            ]
+            ],
         )
 
     def new_clicked(self, e):
@@ -167,14 +181,16 @@ class CodeEditor(ft.UserControl):
         )
 
     def open_file_result(self, e: FilePickerResultEvent):
-        file_path = e.files[0].path
+        self.file_path = e.files[0].path
         self.file_name = e.files[0].name
         self.page.title = self.file_name + self.title_suffix
 
-        with open(file_path, "r") as file:
+        with open(self.file_path, "r") as file:
             self.main_ft.value = file.read()
             self.main_ft.update()
-            self._snackbar(f"File {file_path} Opened", Icon(icons.CHECK, color="black"))
+            self._snackbar(
+                f"File {self.file_path} Opened", Icon(icons.CHECK, color="black")
+            )
         self.page.update()
 
     def save_as(self, e):
@@ -248,21 +264,29 @@ class CodeEditor(ft.UserControl):
             self.save_clicked(e)
         elif e.ctrl and e.shift and e.key == "S":
             self.save_as_clicked(e)
-        elif e.key == "Enter":
-            self.format_code(e)
         elif e.shift and e.key == "R":
             self.run(e)
 
     def run(self, e):
-        code = self.main_ft.value
-        exec(code)
+        self.terminal.value = ""
+        self.terminal.update()
+        command = f"python {self.file_path}"
+        process = subprocess.Popen(
+            command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True
+        )
+        print(command)
+        output, error = process.communicate()
+        self.terminal.value = output
+        self.terminal.update()
+
+        # self.terminal.controls[0].update()
 
 
 def main(page: ft.Page):
     page.title = "Hariri"
 
     myEditor = CodeEditor(page)
-    page.scroll = ScrollMode.ALWAYS
+    # page.scroll = ScrollMode.ALWAYS
 
     page.add(Divider(height=10), myEditor)
 
