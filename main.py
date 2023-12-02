@@ -118,8 +118,8 @@ class CodeEditor(ft.UserControl):
             multiline=True,
             autofocus=True,
             border=InputBorder.NONE,
-            # height=180,
-            value=" ",
+            value=self.current_file_path,
+            text_size=15,
         )
 
         self._terminal = ListView(
@@ -193,8 +193,11 @@ class CodeEditor(ft.UserControl):
             self._snackbar(
                 f"File {self.file_path} Opened", Icon(icons.CHECK, color="black")
             )
+
         self.current_file_path = self.file_path
         self.page.update()
+        self.terminal.value = self.current_file_path + ">"
+        self.terminal.update()
 
     def save_as(self, e):
         file_picker = FilePicker(on_result=self.save_as_result)
@@ -274,8 +277,6 @@ class CodeEditor(ft.UserControl):
         # check if the file is saved before running it
 
         self.save_clicked(e)
-        self.terminal.value = ""
-        self.terminal.update()
         process = subprocess.Popen(
             ["python", self.current_file_path],
             stdout=subprocess.PIPE,
@@ -286,7 +287,7 @@ class CodeEditor(ft.UserControl):
         output, error = process.communicate()
         if output:
             self.terminal.color = "white"
-            self.terminal.value = output
+            self.terminal.value = self.current_file_path + "\n" + output
             self.terminal.update()
         else:
             self.terminal.color = "red"
