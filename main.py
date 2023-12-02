@@ -49,9 +49,11 @@ class CodeEditor(ft.UserControl):
 
     def build(self):
         ## APPBAR ##
+        self._file_txt = Container(content=Text("File", size=20))
+        self._file_txt.padding = padding.only(left=10)
         # File popupmenu
         self.file_menu = ft.PopupMenuButton(
-            content=Text("File", size=15),
+            content=self._file_txt,
             items=[
                 ft.PopupMenuItem(
                     on_click=self.new_clicked,
