@@ -114,8 +114,20 @@ class CodeEditor(ft.UserControl):
 
         # Terminal
 
-        self.terminal = Text(">: ")
+        self.terminal = TextField(
+            multiline=True,
+            autofocus=True,
+            border=InputBorder.NONE,
+            # height=180,
+            value=" ",
+        )
 
+        self._terminal = ListView(
+            height=180,
+            spacing=15,
+            auto_scroll=True,
+        )
+        self._terminal.controls.append(self.terminal)
         # Icons Buttons
 
         self.run_icon = IconButton(icon=icons.PLAY_ARROW, on_click=self.run)
@@ -152,16 +164,7 @@ class CodeEditor(ft.UserControl):
                     ],
                 ),
                 Divider(height=8, opacity=3),
-                Column(
-                    scroll=ScrollMode.ALWAYS,
-                    controls=[
-                        Container(
-                            height=180,
-                            theme_mode=ThemeMode.DARK,
-                            content=self.terminal,
-                        )
-                    ],
-                ),
+                self._terminal,
             ],
         )
 
