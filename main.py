@@ -114,18 +114,6 @@ class CodeEditor(ft.UserControl):
 
         self.terminal = Text(">: ")
 
-        # self.terminal = Column(
-        #     scroll=ScrollMode.ALWAYS,
-        #     controls=[
-        #         Container(
-        #             height=180,
-        #             theme_mode=ThemeMode.DARK,
-        #             bgcolor="black",
-        #             content=TextField(value="gvdgvdvdhuvhudvhdhyd"),
-        #         )
-        #     ],
-        # )
-
         # Icons Buttons
 
         self.run_icon = IconButton(icon=icons.PLAY_ARROW, on_click=self.run)
@@ -162,7 +150,16 @@ class CodeEditor(ft.UserControl):
                     ],
                 ),
                 Divider(height=8, opacity=3),
-                self.terminal,
+                Column(
+                    scroll=ScrollMode.ALWAYS,
+                    controls=[
+                        Container(
+                            height=180,
+                            theme_mode=ThemeMode.DARK,
+                            content=self.terminal,
+                        )
+                    ],
+                ),
             ],
         )
 
@@ -269,30 +266,33 @@ class CodeEditor(ft.UserControl):
             self.run(e)
 
     def run(self, e):
+        # check if the file is saved before running it
+
+        self.save_clicked(e)
         self.terminal.value = ""
         self.terminal.update()
         process = subprocess.Popen(
-            ["python", self.file_path],
+            ["python", self.current_file_path],
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
             universal_newlines=True,
             shell=True,
         )
-        # print(command)
         output, error = process.communicate()
-        print(error)
-        self.terminal.value = output
-        # self.terminal.value = error
-        self.terminal.update()
-
-        # self.terminal.controls[0].update()
+        if output:
+            self.terminal.color = "white"
+            self.terminal.value = output
+            self.terminal.update()
+        else:
+            self.terminal.color = "red"
+            self.terminal.value = error
+            self.terminal.update()
 
 
 def main(page: ft.Page):
     page.title = "Hariri"
 
     myEditor = CodeEditor(page)
-    # page.scroll = ScrollMode.ALWAYS
 
     page.add(Divider(height=10), myEditor)
 
