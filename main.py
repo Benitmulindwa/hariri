@@ -11,7 +11,7 @@ def editor_style():
         "autofocus": True,
         "border": InputBorder.NONE,
         "height": 450,
-        "color": "blue",
+        # "color": "green",
     }
 
 
@@ -112,7 +112,7 @@ class CodeEditor(ft.UserControl):
             ],
         )
 
-        # Terminal
+        ## TERMINAL ##
 
         self.terminal = TextField(
             multiline=True,
@@ -260,7 +260,7 @@ class CodeEditor(ft.UserControl):
         self.main_ft.value = formatted_code
         self.main_ft.update()
 
-    # Adding shortcuts
+    # Adding keyboard shortcuts
 
     def on_keyboard(self, e: ft.KeyboardEvent):
         if e.ctrl and e.key == "N":
