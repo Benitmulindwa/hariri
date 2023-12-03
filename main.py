@@ -11,7 +11,6 @@ def editor_style():
         "autofocus": True,
         "border": InputBorder.NONE,
         "height": 450,
-        # "color": "green",
     }
 
 
@@ -19,6 +18,7 @@ class CodeEditor(ft.UserControl):
     def __init__(self, page):
         super().__init__()
         self.page = page
+        # self.page.theme_mode = ft.ThemeMode.LIGHT
         self.title_suffix = " -Hariri"
         self.current_file_path = ""
         self.page.title = "New File" + self.title_suffix
@@ -298,7 +298,7 @@ class CodeEditor(ft.UserControl):
 
 def main(page: ft.Page):
     page.title = "Hariri"
-
+    # page.theme_mode = ft.ThemeMode.LIGHT
     page.fonts = {"SourceCode": "fonts/SourceCodePro-Light.ttf"}
 
     myEditor = CodeEditor(page)
