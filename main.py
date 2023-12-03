@@ -150,6 +150,7 @@ class CodeEditor(ft.UserControl):
         )
         self.main_ft = TextField(
             **editor_style(),
+            text_style=TextStyle(font_family="SourceCode")
             # on_submit=self.format_code,
         )
 
@@ -298,13 +299,15 @@ class CodeEditor(ft.UserControl):
 def main(page: ft.Page):
     page.title = "Hariri"
 
+    page.fonts = {"SourceCode": "fonts/SourceCodePro-Light.ttf"}
+
     myEditor = CodeEditor(page)
 
     page.add(Divider(height=10), myEditor)
 
 
 if __name__ == "__main__":
-    ft.app(target=main)
+    ft.app(target=main, assets_dir="assets")
 
 
 ###-----------------------------------------------------------------------------------------------------------------------------------#####
