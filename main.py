@@ -110,7 +110,10 @@ class CodeEditor(ft.UserControl):
         # Icons Buttons
 
         self.dark_light_icon = IconButton(
-            icon=icons.DARK_MODE_ROUNDED, on_click=self.switch, data=True
+            icon=icons.LIGHT_MODE_ROUNDED,
+            icon_color="white",
+            on_click=self.switch,
+            data=True,
         )
 
         self.run_icon = IconButton(
@@ -180,6 +183,9 @@ class CodeEditor(ft.UserControl):
                 self.dark_light_icon.icon_color = "white"
                 self.run_icon.icon_color = "white"
                 self.page.theme_mode = ThemeMode.DARK
+
+                self.main_ft.text_style.font_family = "SourceCode"
+                self.main_ft.update()
             self.page.update()
 
     def new_clicked(self, e):
