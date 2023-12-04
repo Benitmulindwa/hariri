@@ -23,29 +23,7 @@ class CodeEditor(ft.UserControl):
         self.current_file_path = ""
         self.page.title = "New File" + self.title_suffix
         self.page.on_keyboard_event = self.on_keyboard
-
-        self.keywords = [
-            "if",
-            "else",
-            "for",
-            "while",
-            "def",
-            "class",
-            "import",
-            "from",
-            "True",
-            "False",
-            "None",
-        ]
-
-    def highlight_synthax(self):
-        content = self.main_ft.value
-        print(content)
-        for word in self.keywords:
-            if word in content:
-                return Text("", spans=[TextSpan(word, TextStyle(color="red"))]).value
-            else:
-                return content
+        self.clicked = 0
 
     def build(self):
         ## APPBAR ##
@@ -128,26 +106,35 @@ class CodeEditor(ft.UserControl):
             auto_scroll=True,
         )
         self._terminal.controls.append(self.terminal)
+
         # Icons Buttons
 
-        self.run_icon = IconButton(icon=icons.PLAY_ARROW, on_click=self.run)
-        self.dark_light_mode = IconButton(icon=icons.WB_SUNNY_ROUNDED)
-
-        self.page.overlay.append(
-            Container(
-                padding=5,
-                expand=True,
-                bgcolor="#164863",
-                content=Row(
-                    controls=[
-                        self.file_menu,
-                        Row(expand=True),
-                        self.run_icon,
-                        self.dark_light_mode,
-                    ]
-                ),
-            )
+        self.dark_light_icon = IconButton(
+            icon=icons.DARK_MODE_ROUNDED, on_click=self.switch, data=True
         )
+
+        self.run_icon = IconButton(
+            icon=icons.PLAY_ARROW,
+            on_click=self.run,
+        )
+
+        ## Overlay_content ##
+
+        self.overlay_content = Container(
+            padding=5,
+            expand=True,
+            bgcolor="#164863",
+            content=Row(
+                controls=[
+                    self.file_menu,
+                    Row(expand=True),
+                    self.run_icon,
+                    self.dark_light_icon,
+                ]
+            ),
+        )
+
+        self.page.overlay.append(self.overlay_content)
         self.main_ft = TextField(
             **editor_style(),
             text_style=TextStyle(font_family="SourceCode")
@@ -168,6 +155,32 @@ class CodeEditor(ft.UserControl):
                 self._terminal,
             ],
         )
+
+    ## Dark-light-mode ##
+
+    def switch(self, e):
+        if e.control.data == True:
+            self.clicked += 1
+            if self.clicked % 2 != 0:
+                self.page.theme_mode = ThemeMode.LIGHT
+                self._file_txt.color = "#164863"
+
+                self.run_icon.icon_color = "#164863"
+                self.dark_light_icon.icon_color = "#164863"
+                self.dark_light_icon.icon = icons.DARK_MODE_ROUNDED
+                self.overlay_content.bgcolor = "#9bbec8"
+
+                self.main_ft.text_style.font_family = "SourceCodeBlack"
+                # self.main_ft.text_style.color = "#164863"
+                self.main_ft.update()
+
+            else:
+                self.dark_light_icon.icon = icons.LIGHT_MODE_ROUNDED
+                self.overlay_content.bgcolor = "#164863"
+                self.dark_light_icon.icon_color = "white"
+                self.run_icon.icon_color = "white"
+                self.page.theme_mode = ThemeMode.DARK
+            self.page.update()
 
     def new_clicked(self, e):
         self.main_ft.value = ""
@@ -299,7 +312,11 @@ class CodeEditor(ft.UserControl):
 def main(page: ft.Page):
     page.title = "Hariri"
     # page.theme_mode = ft.ThemeMode.LIGHT
-    page.fonts = {"SourceCode": "fonts/SourceCodePro-Light.ttf"}
+    page.fonts = {
+        "SourceCode": "fonts/SourceCodePro-Light.ttf",
+        "SourceCodeBold": "fonts/SourceCodePro-Bold.ttf",
+        "SourceCodeBlack": "fonts/SourceCodePro-Black.ttf",
+    }
 
     myEditor = CodeEditor(page)
 
