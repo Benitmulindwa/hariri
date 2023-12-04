@@ -4,3 +4,5 @@
 
 
 Hariri is a Python code editor written in Flet
+
+Feel free to pull a request
