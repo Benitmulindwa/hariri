@@ -91,13 +91,14 @@ class CodeEditor(ft.UserControl):
         )
 
         ## TERMINAL ##
-
         self.terminal = TextField(
             multiline=True,
             autofocus=True,
             border=InputBorder.NONE,
             value=self.current_file_path,
             text_size=15,
+            # color="white",
+            text_style=TextStyle(size=20, color="white"),
         )
 
         self._terminal = ListView(
@@ -174,8 +175,9 @@ class CodeEditor(ft.UserControl):
                 self.overlay_content.bgcolor = "#9bbec8"
 
                 self.main_ft.text_style.font_family = "SourceCodeBlack"
-                # self.main_ft.text_style.color = "#164863"
                 self.main_ft.update()
+                self.terminal.text_style.color = "black"
+                self.terminal.update()
 
             else:
                 self.dark_light_icon.icon = icons.LIGHT_MODE_ROUNDED
@@ -186,7 +188,10 @@ class CodeEditor(ft.UserControl):
 
                 self.main_ft.text_style.font_family = "SourceCode"
                 self.main_ft.update()
+                self.terminal.text_style.color = "white"
+                self.terminal.update()
             self.page.update()
+            # print(self.page.theme_mode)
 
     def new_clicked(self, e):
         self.main_ft.value = ""
@@ -293,6 +298,8 @@ class CodeEditor(ft.UserControl):
         elif e.shift and e.key == "R":
             self.run(e)
 
+    # Run method
+
     def run(self, e):
         # check if the file is saved before running it
 
@@ -306,7 +313,6 @@ class CodeEditor(ft.UserControl):
         )
         output, error = process.communicate()
         if output:
-            self.terminal.color = "white"
             self.terminal.value = self.current_file_path + "\n" + output
             self.terminal.update()
         else:
@@ -317,7 +323,10 @@ class CodeEditor(ft.UserControl):
 
 def main(page: ft.Page):
     page.title = "Hariri"
-    # page.theme_mode = ft.ThemeMode.LIGHT
+
+    # page.theme_mode = ft.ThemeMode.DARK
+    page.theme = ft.Theme()
+
     page.fonts = {
         "SourceCode": "fonts/SourceCodePro-Light.ttf",
         "SourceCodeBold": "fonts/SourceCodePro-Bold.ttf",
