@@ -5,7 +5,7 @@
 Hariri is a Python code editor written in Flet
 
 # Video demo
-![Demo Video]("demo_vid.mp4")
+![Demo Video]("https://github.com/Benitmulindwa/hariri/blob/main/demo_vid.mp4")
 
 ## Requirements: 
 ```python
