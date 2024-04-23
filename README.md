@@ -5,7 +5,7 @@
 Hariri is a Python code editor written in Flet
 
 # Video demo
-<video width="320" height="240" src="demo_vid.pm4" alt="demo video">
+<video width="320" height="240" src="demo_vid.mp4" alt="demo video">
 
 ## Requirements: 
 ```python
