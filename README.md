@@ -4,3 +4,21 @@
 
 
 Hariri is a Python code editor written in Flet
+
+Feel free to pull a request
+
+## You need install 
+```python
+pip install flet
+```
+```python
+pip install autopep8
+```
+## Screenshots from the editor
+![demo]((https://github.com/Benitmulindwa/hariri/blob/main/demo-vid.mp4))
+
+
+
+## Usage
+
+
