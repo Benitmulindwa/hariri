@@ -5,7 +5,9 @@
 Hariri is a Python code editor written in Flet
 
 # Video demo
-
+<video width="320" height="240" controls>
+  <source src="demo_vid.mp4" type="video/mp4"> Demo video
+</video>
 
 ## Requirements: 
 ```python
@@ -22,7 +24,7 @@ pip install autopep8
 
 ### Light Mode
 
-<img src="cap_light.PNG" alt="lightmode">
+<img src="Cap_light.PNG" alt="lightmode">
 
 
 
